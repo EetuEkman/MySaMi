@@ -1,0 +1,12 @@
+﻿@using MySaMi.Data
+@inject MySaMiDbContext context
+
+@{ 
+    var statistics = context.Statistics.FirstOrDefault();
+}
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+        <p class="text-center">MySaMi has received @statistics.QueryCount queries and served @statistics.MeasurementCount measurements.</p>
+    </div>
+</footer>

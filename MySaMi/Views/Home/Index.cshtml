@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome to MySaMi</h1>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <p>Start querying SaMi by clicking the Measurements link in the navigation bar. You can also save and manage your SaMi keys by clicking the Manage keys link in the same navigation bar.</p>
+        }
+        else
+        {
+            <p>Start using MySaMi by creating an account clicking the Register link from the navigation bar. If you already have an account, login by clicking the Login link in the same navigation bar.</p>
+        }
+
+    </div>

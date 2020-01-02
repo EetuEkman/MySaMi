@@ -1,0 +1,105 @@
+﻿@model VisualizerViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts
+{
+    <script>
+        const sensorsUrl = "@Url.Link("Sensors", new { })";
+        const measurementsUrl = "@Url.Link("Measurements", new { })";
+        const userQueriesUrl = "@Url.Link("UserQueries", new { });"
+    </script>
+
+    <environment names="Development">
+        <script src="~/lib/Chart.js/Chart.bundle.js"></script>
+    </environment>
+
+    <environment names="Staging, Test, Production">
+        <script src="~/lib/Chart.js/Chart.bundle.min.js"></script>
+    </environment>
+
+    <script src="~/js/SaMiVisualizer.js"></script>
+}
+
+<form>
+    @if (Model.SaMiKeys == null || Model.SaMiKeys.Count == 0)
+    {
+    <div class="form-row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <p>You have no saved keys. @Html.ActionLink("Click here", "Index", "SaMiKeys") to manage your keys.</p>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    }
+
+<div class="form-row">
+    <div class="col-md-1"></div>
+    @if (Model.SaMiKeys != null && Model.SaMiKeys.Count > 0)
+    {
+        <div class="form-group col-md-5">
+            <label for="key-select" class="font-weight-bold">Saved keys</label>
+            <select id="key-select" class="form-control">
+                @foreach (var SaMiKey in Model.SaMiKeys)
+                {
+                    <option value="@SaMiKey.Key">@SaMiKey.Key</option>
+                }
+            </select>
+            <button id="get-sensors-saved" class="btn btn-primary mt-1">Get sensors</button>
+        </div>
+    }
+    else
+    {
+        <div class="form-group col-md-5">
+            <label for="sami-key">SaMi key</label>
+            <input id="sami-key" class="form-control " type="text" />
+            <button id="get-sensors" class="btn btn-primary  mt-1">Get sensors</button>
+        </div>
+    }
+
+    <div class="form-group col-md-5">
+        <label for="last-queries" class="font-weight-bold">Last queries</label>
+        <ul id="last-queries" class="list-group">
+            @if (Model.SaMiQueries != null && Model.SaMiQueries.Count > 0)
+            {
+                @foreach (var SaMiQuery in Model.SaMiQueries)
+                {
+                    <li class="list-group-item"><b>Key:</b> @SaMiQuery.Key <b>Name:</b> @SaMiQuery.Name <b>Date:</b> @SaMiQuery.Date.ToShortDateString()</li>
+                }
+            }
+            else
+            {
+                <li class="list-group-item">No queries</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<div id="sensor-row" class="form-row invisible">
+    <div class="col-md-1"></div>
+    <div class="form-group col-md-10">
+        <label for="sensor-select" class="font-weight-bold">Select sensor</label>
+        <select id="sensor-select" class="form-control" name="tag"></select>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+<div id="date-row" class="form-row invisible">
+    <div class="col-md-1"></div>
+    <div class="form-group col-md-10">
+        <label for="date" class="font-weight-bold">Select date</label>
+        <input id="date" type="date" />
+        <button id="get-measurements" class="btn btn-primary">Get measurements</button>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+</form>
+
+<div class="container">
+    <canvas id="chart" width="1280" height="800"></canvas>
+</div>
+
