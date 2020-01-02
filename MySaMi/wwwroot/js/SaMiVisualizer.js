@@ -141,7 +141,8 @@
                 chart.update();
             },
             error: function () {
-
+                $("#get-measurements").html("Get measurements");
+                $("#get-measurements").prop("disabled", false);
             },
             complete: function () {
                 $("#get-measurements").html("Get measurements");
